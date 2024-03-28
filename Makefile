@@ -1,6 +1,7 @@
 # Directory Variables
 BIN_DIR := bin
 BUILD_DIR := build
+INCLUDES = -I./src
 
 # Source and Output Files
 BOOT_SRC := ./src/bootloader/boot.asm
@@ -9,10 +10,13 @@ KERNEL_SRC := ./src/kernel.asm
 KERNEL_OBJ := $(BUILD_DIR)/kernel.asm.o
 KERNEL_BIN := $(BIN_DIR)/kernel.bin
 OS_BIN := $(BIN_DIR)/os.bin
+KERNEL_C_SRC := ./src/kernel.c
+KERNEL_C_OBJ := $(BUILD_DIR)/kernel.o
 
 LINKER := ./src/linker.ld
+FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ)
 
-FILES = $(KERNEL_OBJ)
+FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
 # Tool Variables
 QEMU := qemu-system-x86_64
@@ -37,6 +41,9 @@ $(BOOT_BIN): $(BOOT_SRC)
 
 $(KERNEL_OBJ): $(KERNEL_SRC)
 	nasm -f elf -g $< -o $@
+
+$(KERNEL_C_OBJ): $(KERNEL_C_SRC)
+	i686-elf-gcc $(INCLUDES) $(FLAGS) -std=gnu99 -c $(KERNEL_C_SRC) -o $(KERNEL_C_OBJ)
 
 test: all
 	$(QEMU) -hda $(OS_BIN)
