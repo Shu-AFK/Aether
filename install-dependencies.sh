@@ -3,27 +3,27 @@
 # Function to install packages on Debian-based systems
 install_debian() {
   sudo apt update
-  sudo apt install -y build-essential bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo curl
+  sudo apt install -y build-essential bison flex libgmp3-dev libmpc-dev libmpfr-dev texinfo curl qemu nasm make
 }
 
 # Function to install packages on Gentoo
 install_gentoo() {
-  sudo emerge --ask sys-devel/gcc dev-build/make sys-devel/bison sys-devel/flex dev-libs/gmp dev-libs/mpc dev-libs/mpfr sys-apps/texinfo curl
+  sudo emerge --ask sys-devel/gcc sys-devel/make sys-devel/bison sys-devel/flex dev-libs/gmp dev-libs/mpc dev-libs/mpfr sys-apps/texinfo app-emulation/qemu dev-lang/nasm
 }
 
 # Function to install packages on Fedora
 install_fedora() {
-  sudo dnf install -y gcc gcc-c++ make bison flex gmp-devel libmpc-devel mpfr-devel texinfo curl
+  sudo dnf install -y gcc gcc-c++ make bison flex gmp-devel libmpc-devel mpfr-devel texinfo curl qemu nasm
 }
 
 # Function to install packages on OpenBSD
 install_openbsd() {
-  doas pkg_add -v gmp libmpc mpfr curl
+  doas pkg_add -v gmp libmpc mpfr curl qemu nasm gmake
 }
 
 # Function to install packages on Arch Linux
 install_arch() {
-  sudo pacman -Syu base-devel gmp libmpc mpfr curl
+  sudo pacman -Syu base-devel gmp libmpc mpfr curl qemu nasm make
 }
 
 # Detect the operating system and call the respective function
