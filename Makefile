@@ -1,14 +1,20 @@
-all:
-	mkdir bin && \
-	nasm -f bin ./bootloader/boot.asm -o ./bin/boot.bin
-	dd if=./test_message.txt >> ./bin/boot.bin
-	dd if=/dev/zero bs=512 count=1 >> ./bin/boot.bin
+BIN_DIR := bin
+BOOT_SRC := ./src/bootloader/boot.asm
+BOOT_BIN := $(BIN_DIR)/boot.bin
+QEMU := qemu-system-x86_64
 
-test:
-	mkdir bin && \
-	nasm -f bin ./bootloader/boot.asm -o ./bin/boot.bin && \
-	cd bin && \
-	dd if=../test_message.txt >> ./boot.bin
-	dd if=/dev/zero bs=512 count=1 >> ./boot.bin
-	qemu-system-x86_64 -hda boot.bin && \
-	cd ..
+.PHONY: all test clean
+
+all: $(BOOT_BIN)
+
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
+
+$(BOOT_BIN): $(BOOT_SRC) | $(BIN_DIR)
+	nasm -f bin $< -o $@
+
+test: all
+	$(QEMU) -hda $(BOOT_BIN)
+
+clean:
+	rm -rf $(BIN_DIR)
