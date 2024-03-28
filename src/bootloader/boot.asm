@@ -14,13 +14,13 @@ start:
     jmp 0:run
 
 run:
-    cli ; Clear interrupts
+    cli             ; Clear interrupts
     mov ax, 0x00
     mov ds, ax
     mov es, ax
     mov ss, ax
     mov sp, 0x7c00
-    sti ; Enables interrupts
+    sti             ; Enables interrupts
 
 .load_protected:
     cli
@@ -61,24 +61,67 @@ gdt_descriptor:
     dw gdt_end - gdt_start - 1
     dd gdt_start
 
+; Loads the kernel into memory and jumps to it
 [BITS 32]
 load32:
-    mov ax, DATA_SEG
-    mov ds, ax
-    mov ss, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ebp, 0x00200000
-    mov esp, ebp
+    mov eax, 1          ; Starting sector we want to load from
+    mov ecx, 100        ; total number of sectors to load
+    mov edi, 0x0100000  ; Address of where the
+    call ata_lba_read
+    jmp CODE_SEG:0x0100000
 
-    ; Enabling the A20 line
-    in al, 0x92
-    or al, 2
-    out al, 0x92
+ata_lba_read:
+    mov ebx, eax        ; Backup the lba
 
-    jmp $
+    shr eax, 24         ; highest 8 bits of lba (Shifting right to 32 - 24 bits)
+    or eax, 0xE0        ; Selects the master drive
+    mov dx, 0x1f6
+    out dx, al          ; sends the highest 8bits to the hard disk controller
+
+                        ; sends the total sectors to read
+    mov eax, ecx        ; Number of sectors
+    mov dx, 0x1f2
+    out dx, al
+
+    mov eax, ebx        ; Restoring the backup lba
+    mov dx, 0x1f3
+    out dx, al          ; sends more bits to the lda
+
+    mov dx, 0x1f4
+    mov eax, ebx        ; Restoring the backuo lba
+    shr eax, 8          ; Shifts right to send more bits of the lba
+    out dx, al          ; Sending more bits
+
+                        ; Sends upper 16 bits of the lba
+    mov dx, 0x1f5
+    mov eax, ebx
+    shr eax, 16
+    out dx, al
+
+    mov dx, 0x1f7
+    mov al, 0x20
+    out dx, al
+
+    ; Read all sectors into memory
+.next_sector:
+    push ecx
+
+    ; Checking if we need to read
+.try_again:
+    mov dx, 0x1f7
+    in al, dx
+    test al, 8
+    jz .try_again
+
+    ; Reading 256 Words at a time
+    mov ecx, 256        ; Number of times a word should be read
+    mov dx, 0x1f0       ; Port
+    rep insw            ; Reading a word from the port specified in dx, storing it in edi
+    pop ecx
+    loop .next_sector
+
+    ret ; The end of reading the amount of sectors specified in ecx
 
 times 510-($ - $$) db 0 ; Fills the bytes of the file with 0 up to 510
-dw 0xAA55 ; Writes the bios signature
+dw 0xAA55               ; Writes the bios signature
 
