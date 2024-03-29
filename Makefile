@@ -3,6 +3,7 @@ BIN_DIR := bin
 BUILD_DIR := build
 BUILD_DIR_MEM := $(BUILD_DIR)/memory
 BUILD_DIR_IDT := $(BUILD_DIR)/idt
+BUILD_DIR_IO := $(BUILD_DIR)/io
 INCLUDES = -I./src
 
 # Source and Output Files
@@ -20,9 +21,11 @@ IDT_OBJ := $(BUILD_DIR_IDT)/idt.o
 IDT_SRC := ./src/idt/idt.c
 MEM_OBJ := $(BUILD_DIR_MEM)/memory.o
 MEM_SRC := ./src/memory/memory.c
+IO_ASM_OBJ := $(BUILD_DIR_IO)/io.asm.o
+IO_ASM_SRC := ./src/io/io.asm
 
 LINKER := ./src/linker.ld
-FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ)
+FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ)
 
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -38,7 +41,7 @@ all: setup $(BOOT_BIN) $(KERNEL_BIN)
 	dd if=/dev/zero bs=512 count=100 >> $(OS_BIN) # Fills the rest with 0 to for a sector
 
 setup:
-	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT)
+	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO)
 
 $(KERNEL_BIN): $(FILES)
 	i686-elf-ld -g -relocatable $^ -o $(BUILD_DIR)/kernelfull.o
@@ -61,6 +64,9 @@ $(IDT_OBJ): $(IDT_SRC)
 
 $(MEM_OBJ): $(MEM_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
+
+$(IO_ASM_OBJ): $(IO_ASM_SRC)
+	nasm -f elf -g $< -o $@
 
 test: all
 	$(QEMU) -hda $(OS_BIN)
