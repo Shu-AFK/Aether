@@ -66,5 +66,4 @@ void kernel_main() {
 
     // Initialise the interrupt table
     idt_init();
-    outb(0x60, 0xff);
 }
