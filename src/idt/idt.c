@@ -12,7 +12,7 @@ extern void int21h();
 extern void no_interrupt();
 
 void int21h_handler() {
-    print("Keyboard pressed!\n", 15);
+    print("Keyboard pressed!\n");
     outb(0x20, 0x20);
 }
 
@@ -21,7 +21,7 @@ void no_interrupt_handler() {
 }
 
 void idt_zero() {
-    print("Divide by zero error\n", 15);
+    print("Divide by zero error\n");
 }
 
 void idt_set(int interrupt_no, void *address) {

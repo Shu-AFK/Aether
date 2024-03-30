@@ -50,7 +50,17 @@ int strlen(char *str) {
     return counter;
 }
 
-int print(char *str, char color) {
+int print(char *str) {
+    int len = strlen(str);
+
+    for(int i = 0; i < len; i++) {
+        terminal_writechar(str[i], 15);
+    }
+
+    return 0;
+}
+
+int print_col(char *str, char color) {
     int len = strlen(str);
 
     for(int i = 0; i < len; i++) {
@@ -62,7 +72,7 @@ int print(char *str, char color) {
 
 void kernel_main() {
     terminal_initialise();
-    print("Hello, world!\ntest", 15);
+    print("Hello, world!\ntest");
 
     // Initialise the interrupt table
     idt_init();
