@@ -1,6 +1,7 @@
 #include "kernel.h"
 #include "idt/idt.h"
 #include "io/io.h"
+#include "memory/heap/kheap.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -72,8 +73,21 @@ int print_col(char *str, char color) {
 
 void kernel_main() {
     terminal_initialise();
+
     print("Hello, world!\ntest");
 
-    // Initialise the interrupt table
+    // Initialise the interrupt table and the heap
+    if(kheap_init() < 0) {
+        return; // has to be panic in the future
+    }
     idt_init();
+
+    void *ptr = kmalloc(50);
+    void *ptr2 = kmalloc(5000);
+    kfree(ptr);
+    void *ptr3 = kmalloc(50);
+
+    if(ptr3 || ptr2) {
+        return;
+    }
 }
