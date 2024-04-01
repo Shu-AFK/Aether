@@ -30,7 +30,6 @@ _start:
     mov al, 00000001b   ; Tells the PIC to be in x86 mode
     out 0x21, al
 
-    sti
     call kernel_main
 
     jmp $

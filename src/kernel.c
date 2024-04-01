@@ -76,19 +76,10 @@ void kernel_main() {
 
     print("Hello, world!\ntest");
 
-    // Initialise the interrupt table and the heap
+    // Initialise the heap
     if(kheap_init() < 0) {
         return; // has to be panic in the future
     }
-    idt_init();
-
-    void *ptr = kmalloc(50);
-    void *ptr2 = kmalloc(5000);
-    void *ptr3 = kmalloc(5000);
-    kfree(ptr);
-    void *ptr4 = kmalloc(50);
-
-    if(ptr3 || ptr2 || ptr4) {
-        return;
-    }
+    idt_init(); // Inits the interrupt table
+    enable_interrupts();
 }
