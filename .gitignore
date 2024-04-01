@@ -1,3 +1,6 @@
 bin/
 build/
 *.bin
+*.o
+obj/
+test_heap
