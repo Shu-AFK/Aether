@@ -27,9 +27,13 @@ HEAP_OBJ := $(BUILD_DIR_MEM)/heap/heap.o
 HEAP_SRC := ./src/memory/heap/heap.c
 KHEAP_OBJ := $(BUILD_DIR_MEM)/heap/kheap.o
 KHEAP_SRC := ./src/memory/heap/kheap.c
+PAGING_OBJ := $(BUILD_DIR_MEM)/paging/paging.o
+PAGING_SRC := ./src/memory/paging/paging.c
+PAGING_ASM_OBJ := $(BUILD_DIR_MEM)/paging/paging.asm.o
+PAGING_ASM_SRC := ./src/memory/paging/paging.asm
 
 LINKER := ./src/linker.ld
-FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ)
+FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ) $(PAGING_ASM_OBJ) $(PAGING_OBJ)
 
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -45,7 +49,7 @@ all: setup $(BOOT_BIN) $(KERNEL_BIN)
 	dd if=/dev/zero bs=512 count=100 >> $(OS_BIN) # Fills the rest with 0 to for a sector
 
 setup:
-	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO) $(BUILD_DIR_MEM)/heap
+	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO) $(BUILD_DIR_MEM)/heap $(BUILD_DIR_MEM)/paging
 
 $(KERNEL_BIN): $(FILES)
 	i686-elf-ld -g -relocatable $^ -o $(BUILD_DIR)/kernelfull.o
@@ -77,6 +81,12 @@ $(HEAP_OBJ): $(HEAP_SRC)
 
 $(KHEAP_OBJ): $(KHEAP_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
+
+$(PAGING_OBJ): $(PAGING_SRC)
+	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
+
+$(PAGING_ASM_OBJ): $(PAGING_ASM_SRC)
+	nasm -f elf -g $< -o $@
 
 test: all
 	$(QEMU) -hda $(OS_BIN)

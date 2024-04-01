@@ -5,6 +5,7 @@
 #include <stddef.h>
 
 void *kmalloc(size_t size);
+void *kzalloc(size_t size);
 int kheap_init();
 void kfree(void *addr);
 
