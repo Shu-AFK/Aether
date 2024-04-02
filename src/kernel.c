@@ -4,6 +4,8 @@
 #include "memory/heap/kheap.h"
 #include "memory/paging/paging.h"
 #include "disk/disk.h"
+#include "string/string.h"
+#include "fs/pparser.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -43,14 +45,6 @@ void terminal_initialise() {
             video_mem[(i * VGA_WIDTH) + j] = terminal_make_char(' ', 0);
         }
     }
-}
-
-int strlen(char *str) {
-    int counter = 0;
-    while(str[counter] != '\0')
-        counter++;
-
-    return counter;
 }
 
 int print(char *str) {

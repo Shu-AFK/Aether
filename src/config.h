@@ -13,4 +13,6 @@
 
 #define AETHER_SECTOR_SIZE 512
 
+#define AETHER_MAX_PATH 108
+
 #endif

@@ -6,5 +6,6 @@
 #define EINVARG 2
 #define ENOMEM 3
 #define EHEAPCREATE 4
+#define EBADPATH 5
 
 #endif
