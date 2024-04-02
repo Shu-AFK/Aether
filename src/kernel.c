@@ -3,6 +3,7 @@
 #include "io/io.h"
 #include "memory/heap/kheap.h"
 #include "memory/paging/paging.h"
+#include "disk/disk.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -83,6 +84,9 @@ void kernel_main() {
     if(kheap_init() < 0) {
         return; // has to be panic in the future
     }
+
+    // Search and initialises disks
+    disk_search_and_init();
 
     // Initialises the interrupt descriptor table
     idt_init();
