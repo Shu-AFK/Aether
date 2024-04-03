@@ -5,7 +5,7 @@ The project aims to explore core concepts such as system architecture, process m
 
 ## Project Overview
 
-Building Aether is all about learning and growing. Every piece of it was put together with the goal of really getting to grips with how operating systems eotk. 
+Building Aether is all about learning and growing. Every piece of it was put together with the goal of really getting to grips with how operating systems work. 
 It's a hands-on way to peek under the hood and understand what makes them run.
 
 ## Getting Started
@@ -29,5 +29,8 @@ chmod +x install-dependencies.sh
 ### Building the Kernel and running it
 
 ```bash
-make test
+chmod +x build-and-test.sh
+./build-and-test.sh
 ```
+## License
+This project is licensed under the MIT License - see the (License)[LICENSE.md] file for details.
