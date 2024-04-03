@@ -32,5 +32,10 @@ chmod +x install-dependencies.sh
 chmod +x build-and-test.sh
 ./build-and-test.sh
 ```
+
+## Roadmap
+For a detailed look at the future plans and enhancements for the Aether kernel, please refer to the [Roadmap](ROADMAP.md) file.
+It outlines the upcoming features, improvements, and architectural changes that are in the pipeline.
+
 ## License
 This project is licensed under the MIT License - see the [License](LICENSE.md) file for details.
