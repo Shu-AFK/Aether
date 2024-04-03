@@ -4,3 +4,4 @@ build/
 *.o
 obj/
 test_heap
+test.txt

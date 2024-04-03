@@ -57,7 +57,10 @@ all: setup $(BOOT_BIN) $(KERNEL_BIN)
 	rm -rf $(OS_BIN)
 	dd if=$(BOOT_BIN) >> $(OS_BIN)
 	dd if=$(KERNEL_BIN) >> $(OS_BIN)
-	dd if=/dev/zero bs=512 count=100 >> $(OS_BIN) # Fills the rest with 0 to for a sector
+	dd if=/dev/zero bs=1048576 count=16 >> $(OS_BIN) # Fills the rest with 0 to for a sector
+	sudo mount -t vfat ./bin/os.bin /mnt/d # Mounts os.bin to /mnt/d so we can store files in the binary
+	sudo cp ./test.txt /mnt/d # Copying a testfile to /mnt/d (Remove if you don't want it)
+	sudo umount /mnt/d # Unmounting
 
 setup:
 	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO) $(BUILD_DIR_MEM)/heap $(BUILD_DIR_MEM)/paging $(BUILD_DIR_DISK) $(BUILD_DIR_FS) $(BUILD_DIR_STR)
