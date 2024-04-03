@@ -1,5 +1,5 @@
 #ifndef AETHER_DISK_H
-#define DISK_H
+#define AETHER_DISK_H
 
 typedef unsigned int AETHER_DISK_TYPE;
 

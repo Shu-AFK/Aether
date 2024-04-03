@@ -6,6 +6,7 @@
 #include "disk/disk.h"
 #include "string/string.h"
 #include "fs/pparser.h"
+#include "disk/dstream.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -67,12 +68,12 @@ int print_col(char *str, char color) {
     return 0;
 }
 
-static struct paging_4gb_chunk* kernel_chunk = 0;
+static struct paging_4gb_chunk* kernel_chunk = NULL;
 
 void kernel_main() {
     terminal_initialise();
 
-    print("Hello, world!\ntest");
+    print("Hello, world!\n");
 
     // Initialises the heap
     if(kheap_init() < 0) {

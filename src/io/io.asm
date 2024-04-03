@@ -21,7 +21,7 @@ insw:
     mov ebp, esp
 
     xor eax, eax
-    mov ebx, [ebp + 8]
+    mov edx, [ebp + 8]
     in ax, dx
 
     pop ebp
