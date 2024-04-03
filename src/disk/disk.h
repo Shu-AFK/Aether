@@ -1,6 +1,8 @@
 #ifndef AETHER_DISK_H
 #define AETHER_DISK_H
 
+#include "fs/file.h"
+
 typedef unsigned int AETHER_DISK_TYPE;
 
 // Represents a real physical hard disk
@@ -9,6 +11,8 @@ typedef unsigned int AETHER_DISK_TYPE;
 struct disk {
     AETHER_DISK_TYPE type;
     int sector_size;
+
+    struct filesystem *filesystem;
 };
 
 int disk_read_block(struct disk *idisk, unsigned int lba, int total, void *buf);
