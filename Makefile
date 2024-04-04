@@ -44,9 +44,11 @@ DSTREAM_OBJ := $(BUILD_DIR_DISK)/dstream.o
 DSTREAM_SRC := ./src/disk/dstream.c
 FILE_OBJ := $(BUILD_DIR_FS)/file.o
 FILE_SRC := ./src/fs/file.c
+FAT16_OBJ := $(BUILD_DIR_FS)/fat/fat16.o
+FAT16_SRC := ./src/fs/fat/fat16.c
 
 LINKER := ./src/linker.ld
-FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ) $(PAGING_ASM_OBJ) $(PAGING_OBJ) $(DISK_OBJ) $(STR_OBJ) $(PARS_OBJ) $(DSTREAM_OBJ) $(FILE_OBJ)
+FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ) $(PAGING_ASM_OBJ) $(PAGING_OBJ) $(DISK_OBJ) $(STR_OBJ) $(PARS_OBJ) $(DSTREAM_OBJ) $(FAT16_OBJ) $(FILE_OBJ)
 
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -65,7 +67,7 @@ all: setup $(BOOT_BIN) $(KERNEL_BIN)
 	sudo umount /mnt/d # Unmounting
 
 setup:
-	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO) $(BUILD_DIR_MEM)/heap $(BUILD_DIR_MEM)/paging $(BUILD_DIR_DISK) $(BUILD_DIR_FS) $(BUILD_DIR_STR)
+	mkdir -p $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR_MEM) $(BUILD_DIR_IDT) $(BUILD_DIR_IO) $(BUILD_DIR_MEM)/heap $(BUILD_DIR_MEM)/paging $(BUILD_DIR_DISK) $(BUILD_DIR_FS) $(BUILD_DIR_STR) $(BUILD_DIR_FS)/fat
 
 $(KERNEL_BIN): $(FILES)
 	i686-elf-ld -g -relocatable $^ -o $(BUILD_DIR)/kernelfull.o
@@ -117,6 +119,9 @@ $(DSTREAM_OBJ): $(DSTREAM_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
 
 $(FILE_OBJ): $(FILE_SRC)
+	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
+
+$(FAT16_OBJ): $(FAT16_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
 
 test: all

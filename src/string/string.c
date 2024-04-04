@@ -1,4 +1,5 @@
 #include "string.h"
+#include <stddef.h>
 
 int strlen(const char *str) {
     int counter = 0;
@@ -17,6 +18,20 @@ int strnlen(const char *str, int max) {
     }
 
     return i;
+}
+
+char *strcpy(char *dest, const char *src) {
+    if(dest == NULL || src == NULL) {
+        return NULL;
+    }
+
+    char *tmp = dest;
+    while(*src != '\0') {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+
+    return tmp;
 }
 
 bool is_digit(const char c) {

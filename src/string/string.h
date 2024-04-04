@@ -5,6 +5,7 @@
 
 int strlen(const char *str);
 int strnlen(const char *str, int max);
+char *strcpy(char *dest, const char *src);
 bool is_digit(const char c);
 int to_numeric_digit(const char c);
 void reverse(char *s);

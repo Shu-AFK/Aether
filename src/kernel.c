@@ -7,6 +7,7 @@
 #include "string/string.h"
 #include "fs/pparser.h"
 #include "disk/dstream.h"
+#include "fs/file.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -79,6 +80,9 @@ void kernel_main() {
     if(kheap_init() < 0) {
         return; // has to be panic in the future
     }
+
+    // Initialises filesystems
+    fs_init();
 
     // Search and initialises disks
     disk_search_and_init();
