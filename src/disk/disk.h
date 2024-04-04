@@ -12,7 +12,12 @@ struct disk {
     AETHER_DISK_TYPE type;
     int sector_size;
 
+    int id;
+
     struct filesystem *filesystem;
+
+    // The private data of the filesystem
+    void *fs_private;
 };
 
 int disk_read_block(struct disk *idisk, unsigned int lba, int total, void *buf);
