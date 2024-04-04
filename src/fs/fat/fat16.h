@@ -32,7 +32,7 @@ struct fat16_header_extended {
     uint32_t volume_id;
     uint8_t volume_id_string[11];
     uint8_t system_id_string[8];
-} __atribute__((packed));
+} __attribute__ ((packed));
 
 struct fat16_header {
     uint8_t short_jmp_ins[3];
@@ -49,7 +49,7 @@ struct fat16_header {
     uint16_t number_of_heads;
     uint32_t hidden_sectors;
     uint32_t sectors_big;
-} __atribute__((packed));
+} __attribute__ ((packed));
 
 struct fat16_h {
     struct fat16_header primary_header;
@@ -72,7 +72,7 @@ struct fat16_directory_item {
     uint16_t last_mod_date;
     uint16_t low_16_bits_first_cluster;
     uint32_t file_size;
-} __atribute__((packed));
+} __attribute__ ((packed));
 
 struct fat16_directory {
     struct fat16_directory_item *item;
