@@ -1,6 +1,14 @@
 #include "string.h"
 #include <stddef.h>
 
+char tolower(char s1) {
+    if(s1 >= 65 && s1 <= 90) {
+        s1 += 32;
+    }
+
+    return s1;
+}
+
 int strlen(const char *str) {
     int counter = 0;
     while(str[counter] != '\0')
@@ -20,6 +28,17 @@ int strnlen(const char *str, int max) {
     return i;
 }
 
+int strnlen_terminator(const char *str, int max, char terminator) {
+    int i = 0;
+    for(i = 0; i < max; i++) {
+        if(str[i] == '\0' || str[i] == terminator) {
+            break;
+        }
+    }
+
+    return i;
+}
+
 char *strcpy(char *dest, const char *src) {
     if(dest == NULL || src == NULL) {
         return NULL;
@@ -32,6 +51,56 @@ char *strcpy(char *dest, const char *src) {
     *dest = '\0';
 
     return tmp;
+}
+
+int istrncmp(const char *str1, const char *str2, int n) {
+    unsigned char u1, u2;
+    while(n-- > 0) {
+        u1 = (unsigned char) *str1++;
+        u2 = (unsigned char) *str2++;
+
+        if(u1 != u2 && tolower(u1) != tolower(u2)) {
+            return u1 - u2;
+        }
+        if(u1 == '\0') {
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+int strncmp(const char *str1, const char *str2, int n) {
+    unsigned char u1, u2;
+    while(n-- > 0) {
+        u1 = (unsigned char) *str1++;
+        u2 = (unsigned char) *str2++;
+
+        if(u1 != u2) {
+            return u1 - u2;
+        }
+        if(u1 == '\0') {
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+int strcmp(const char *str1, const char *str2) {
+    int str1_len = strlen(str1);
+    int str2_len = strlen(str2);
+
+    if(str1_len != str2_len)
+        return -1;
+
+    for(int i = 0; i < str1_len; i++) {
+        if(str1[i] != str2[i]) {
+            return str1[i] - str2[i];
+        }
+    }
+
+    return 0;
 }
 
 bool is_digit(const char c) {
