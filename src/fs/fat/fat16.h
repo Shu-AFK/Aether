@@ -90,7 +90,7 @@ struct fat16_item {
     FAT16_ITEM_TYPE type;
 };
 
-struct fat16_item_descriptor {
+struct fat16_file_descriptor {
     struct fat16_item *item;
     uint32_t pos;
 };
