@@ -101,6 +101,10 @@ void kernel_main() {
     int fd = fopen("0:/test.txt", "r");
     if(fd) {
         print("test.txt is open!\n");
+
+        char buf[200];
+        fread(buf, 200, 1, fd);
+        print(buf);
     } else {
         print("Unabe to find file test.txt!\n");
     }
