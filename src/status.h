@@ -8,6 +8,6 @@
 #define EHEAPCREATE 4
 #define EBADPATH 5
 #define EFSNOTUS 6
-#define ERDONLY
+#define ERDONLY 7
 
 #endif

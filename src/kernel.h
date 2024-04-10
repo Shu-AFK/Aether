@@ -11,7 +11,7 @@ int print(char *str);
 int print_col(char *str, char color);
 
 #define ERROR(value) (void *) (value)
-#define ERROR_I(value) (int) (value);
+#define ERROR_I(value) (int) (value)
 #define ISERR(value) ((int) value < 0)
 
 #endif

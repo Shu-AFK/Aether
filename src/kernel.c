@@ -95,5 +95,15 @@ void kernel_main() {
     paging_switch(paging_4gb_chunk_get_directory(kernel_chunk)); // Switch to kernel paging chunk
     enable_paging();
 
+
     enable_interrupts();
+
+    int fd = fopen("0:/test.txt", "r");
+    if(fd) {
+        print("test.txt is open!\n");
+    } else {
+        print("Unabe to find file test.txt!\0");
+    }
+
+    while(1) {}
 }
