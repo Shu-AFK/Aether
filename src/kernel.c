@@ -102,7 +102,7 @@ void kernel_main() {
     if(fd) {
         print("test.txt is open!\n");
     } else {
-        print("Unabe to find file test.txt!\0");
+        print("Unabe to find file test.txt!\n");
     }
 
     while(1) {}
