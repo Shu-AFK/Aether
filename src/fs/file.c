@@ -160,6 +160,20 @@ out:
     return res;
 }
 
+int fstat(int fd, struct file_stat *stat) {
+    int res = 0;
+    struct file_descriptor *desc = file_get_descriptor(fd);
+    if(desc == NULL) {
+        res = -EIO;
+        goto out;
+    }
+
+    res = desc->filesystem->stat(desc->disk, desc->private, stat);
+
+out:
+    return res;
+}
+
 int fseek(int fd, int offset, FILE_SEEK_MODE whence) {
     int res = 0;
     struct file_descriptor *desc = file_get_descriptor(fd);
@@ -192,3 +206,5 @@ int fread(void *ptr, uint32_t size, uint32_t nmemb, int fd) {
 out:
     return res;
 }
+
+
