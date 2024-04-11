@@ -103,6 +103,7 @@ void kernel_main() {
         print("test.txt is open!\n");
 
         char buf[200];
+        fseek(fd, 2, SEEK_SET);
         fread(buf, 200, 1, fd);
         print(buf);
     } else {

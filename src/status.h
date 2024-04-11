@@ -9,5 +9,6 @@
 #define EBADPATH 5
 #define EFSNOTUS 6
 #define ERDONLY 7
+#define EUNIMP 8
 
 #endif
