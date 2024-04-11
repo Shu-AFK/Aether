@@ -102,6 +102,9 @@ void kernel_main() {
     if(fd) {
         print("test.txt is open!\n");
 
+        struct file_stat s;
+        fstat(fd, &s);
+
         char buf[200];
         fseek(fd, 2, SEEK_SET);
         fread(buf, 200, 1, fd);

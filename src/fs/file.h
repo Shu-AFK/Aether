@@ -36,7 +36,7 @@ typedef int (*FS_READ_FUNCTION)(struct disk *disk, void *private, uint32_t size,
 typedef int(*FS_RESOLVE_FUNCTION)(struct disk *disk);
 
 typedef int (*FS_SEEK_FUNCTION)(void *private, uint32_t offset, FILE_SEEK_MODE seek_mode);
-typedef int (*FS_STAT_FUNCTION)(void *disk, void *private, struct file_stat *stat);
+typedef int (*FS_STAT_FUNCTION)(struct disk *disk, void *private, struct file_stat *stat);
 
 struct filesystem {
     // Filesystem should return 0 form resolve if the provided disk is using its filesystem
