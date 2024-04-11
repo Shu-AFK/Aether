@@ -109,6 +109,7 @@ void kernel_main() {
         fseek(fd, 2, SEEK_SET);
         fread(buf, 200, 1, fd);
         print(buf);
+        fclose(fd);
     } else {
         print("Unabe to find file test.txt!\n");
     }

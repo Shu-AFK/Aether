@@ -47,6 +47,11 @@ void fs_init() {
     fs_load();
 }
 
+static void file_free_descriptor(struct file_descriptor *desc) {
+    file_descriptors[desc->index - 1] = 0;
+    kfree(desc);
+}
+
 static int file_new_descriptor(struct file_descriptor **desc_out) {
     int res = -ENOMEM;
     for(int i = 0; i < AETHER_MAX_FILE_DESCRIPTORS; i++) {
@@ -216,6 +221,9 @@ int fclose(int fd) {
     }
 
     res = desc->filesystem->close(desc->private);
+    if(res == AETHER_OK) {
+        file_free_descriptor(desc);
+    }
 
 out:
     return res;
