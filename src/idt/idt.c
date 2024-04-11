@@ -21,7 +21,7 @@ void no_interrupt_handler() {
 }
 
 void idt_zero() {
-    print("Divide by zero error\n");
+    panic("divide by zero error!\n");
 }
 
 void idt_set(int interrupt_no, void *address) {

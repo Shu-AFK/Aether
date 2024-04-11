@@ -71,6 +71,11 @@ int print_col(char *str, char color) {
 
 static struct paging_4gb_chunk* kernel_chunk = NULL;
 
+void panic(const char *msg) {
+    print(msg);
+    while(1) {}
+}
+
 void kernel_main() {
     terminal_initialise();
 
@@ -78,7 +83,7 @@ void kernel_main() {
 
     // Initialises the heap
     if(kheap_init() < 0) {
-        return; // has to be panic in the future
+        panic("Failed to init heap\n");
     }
 
     // Initialises filesystems

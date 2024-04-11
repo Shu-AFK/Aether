@@ -25,9 +25,7 @@ void fs_insert_filesystem(struct filesystem *filesystem) {
     struct filesystem **fs;
     fs = fs_get_free_filesystem();
     if(fs == NULL) {
-        // Has to panic in the future
-        print("Problem inserting filesystem");
-        while(1) {}
+        panic("Problem inserting filesystem");
     }
 
     *fs = filesystem;

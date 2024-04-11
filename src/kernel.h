@@ -9,6 +9,7 @@
 void kernel_main();
 int print(char *str);
 int print_col(char *str, char color);
+void panic(const char *msg);
 
 #define ERROR(value) (void *) (value)
 #define ERROR_I(value) (int) (value)
