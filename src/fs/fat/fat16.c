@@ -511,7 +511,7 @@ int fat16_close(void *private) {
     return 0;
 }
 
-// TODO: Need to implement statting for directories
+// TODO(#6): Need to implement statting for directories
 // TODO: Need to implement support for other flags
 int fat16_stat(struct disk *disk, void *private, struct file_stat *stat) {
     int res = 0;
