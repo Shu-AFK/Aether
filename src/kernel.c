@@ -3,25 +3,28 @@
 #include "io/io.h"
 #include "memory/heap/kheap.h"
 #include "memory/paging/paging.h"
+#include "memory/memory.h"
 #include "disk/disk.h"
 #include "string/string.h"
 #include "fs/pparser.h"
 #include "disk/dstream.h"
 #include "fs/file.h"
+#include "config.h"
+#include "gdt/gdt.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
 uint16_t terminal_col = 0;
 
-uint16_t terminal_make_char(char c, char color) {
+uint16_t terminal_make_char(const char c, const char color) {
     return (color << 8) | c;
 }
 
-void terminal_putchar(int x, int y, char c, char color) {
+void terminal_putchar(int x, int y, const char c, const char color) {
     video_mem[(y * VGA_WIDTH) + x] = terminal_make_char(c, color);
 }
 
-void terminal_writechar(char c, char color) {
+void terminal_writechar(const char c, const char color) {
     if(c == '\n') {
         terminal_col = 0;
         terminal_row++;
@@ -49,7 +52,7 @@ void terminal_initialise() {
     }
 }
 
-int print(char *str) {
+int print(const char *str) {
     int len = strlen(str);
 
     for(int i = 0; i < len; i++) {
@@ -59,7 +62,7 @@ int print(char *str) {
     return 0;
 }
 
-int print_col(char *str, char color) {
+int print_col(const char *str, const char color) {
     int len = strlen(str);
 
     for(int i = 0; i < len; i++) {
@@ -76,10 +79,24 @@ void panic(const char *msg) {
     while(1) {}
 }
 
+struct gdt gdt_real[AETHER_TOTAL_GDT_SEGMENTS];
+
+struct gdt_structured gdt_structured[AETHER_TOTAL_GDT_SEGMENTS] = {
+    {.base = 0x00, .limit = 0x00        , .type = 0x00},        // NULL segment
+    {.base = 0x00, .limit = 0xffffffff  , .type = 0x9a},        // Kernel code segment
+    {.base = 0x00, .limit = 0xffffffff  , .type = 0x92},        // Kernel data segment
+};
+
 void kernel_main() {
     terminal_initialise();
 
     print("Hello, world!\n");
+
+    // Sets and loads the global descriptor table
+    memset(gdt_real, 0, sizeof(gdt_real));
+    gdt_structured_to_gdt(gdt_real, gdt_structured, AETHER_TOTAL_GDT_SEGMENTS);
+
+    gdt_load(gdt_real, sizeof(gdt_real));
 
     // Initialises the heap
     if(kheap_init() < 0) {
