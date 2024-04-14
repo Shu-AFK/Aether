@@ -11,6 +11,7 @@
 #include "fs/file.h"
 #include "config.h"
 #include "gdt/gdt.h"
+#include "task/tss.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -79,12 +80,17 @@ void panic(const char *msg) {
     while(1) {}
 }
 
+struct tss tss;
+
 struct gdt gdt_real[AETHER_TOTAL_GDT_SEGMENTS];
 
 struct gdt_structured gdt_structured[AETHER_TOTAL_GDT_SEGMENTS] = {
-    {.base = 0x00, .limit = 0x00        , .type = 0x00},        // NULL segment
-    {.base = 0x00, .limit = 0xffffffff  , .type = 0x9a},        // Kernel code segment
-    {.base = 0x00, .limit = 0xffffffff  , .type = 0x92},        // Kernel data segment
+    {.base = 0x00,              .limit = 0x00,          .type = 0x00},        // NULL segment
+    {.base = 0x00,              .limit = 0xffffffff,    .type = 0x9a},        // Kernel code segment
+    {.base = 0x00,              .limit = 0xffffffff,    .type = 0x92},        // Kernel data segment
+    {.base = 0x00,              .limit = 0xffffffff,    .type = 0xf8},        // User code segment
+    {.base = 0x00,              .limit = 0xffffffff,    .type = 0xf2},        // User data segment
+    {.base = (uint32_t) &tss,   .limit = sizeof(tss),   .type = 0xE9},        // TSS segment
 };
 
 void kernel_main() {
@@ -112,6 +118,14 @@ void kernel_main() {
     // Initialises the interrupt descriptor table
     idt_init();
 
+    // Setup TSS
+    memset(&tss, 0, sizeof(tss));
+    tss.esp0 = 0x600000; // Kernel stack location
+    tss.ss0 = KERNEL_DATA_SELECTOR;
+
+    // Load the tss
+    tss_load(0x28); // Offset in the gdt_real for the tss segment
+
     // Sets up paging
     kernel_chunk = paging_new_4gb(PAGING_IS_WRITEABLE | PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL);
     paging_switch(paging_4gb_chunk_get_directory(kernel_chunk)); // Switch to kernel paging chunk
@@ -119,22 +133,6 @@ void kernel_main() {
 
 
     enable_interrupts();
-
-    int fd = fopen("0:/test.txt", "r");
-    if(fd) {
-        print("test.txt is open!\n");
-
-        struct file_stat s;
-        fstat(fd, &s);
-
-        char buf[200];
-        fseek(fd, 2, SEEK_SET);
-        fread(buf, 200, 1, fd);
-        print(buf);
-        fclose(fd);
-    } else {
-        print("Unabe to find file test.txt!\n");
-    }
 
     while(1) {}
 }
