@@ -18,7 +18,7 @@ struct registers {
     uint32_t flags;
     uint32_t esp;
     uint32_t ss;
-};
+} __attribute__((packed));
 
 struct process;
 
@@ -43,5 +43,14 @@ struct task *task_new(struct process *process);
 int task_free(struct task *task);
 struct task *task_current();
 struct task *task_get_next();
+
+int task_switch(struct task *task);
+int task_page();
+
+void run_first_task();
+
+void task_return(struct registers *regs);
+void restore_general_purpose_registers(struct registers *regs);
+void user_registers();
 
 #endif
