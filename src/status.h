@@ -10,5 +10,6 @@
 #define EFSNOTUS 6
 #define ERDONLY 7
 #define EUNIMP 8
+#define EISTKN 9
 
 #endif

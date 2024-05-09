@@ -53,6 +53,28 @@ char *strcpy(char *dest, const char *src) {
     return tmp;
 }
 
+char *strncpy(char *dest, const char *src, int count) {
+    if(dest == NULL || src == NULL) {
+        return NULL;
+    }
+
+    if(count < 0) {
+        return NULL;
+    }
+
+    int i = 0;
+    for(; i < count - 1; i++) {
+        if(src[i] == '\0') {
+            break;
+        }
+
+        dest[i] = src[i];
+    }
+
+    dest[i] = '\0';
+    return dest;
+}
+
 int istrncmp(const char *str1, const char *str2, int n) {
     unsigned char u1, u2;
     while(n-- > 0) {

@@ -56,9 +56,11 @@ TSS_ASM_OBJ := $(BUILD_DIR_TASK)/tss.asm.o
 TSS_ASM_SRC := ./src/task/tss.asm
 TASK_OBJ := $(BUILD_DIR_TASK)/task.o
 TASK_SRC := ./src/task/task.c
+PROCESS_OBJ := $(BUILD_DIR_TASK)/process.o
+PROCESS_SRC := ./src/task/process.c
 
 LINKER := ./src/linker.ld
-FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ) $(PAGING_ASM_OBJ) $(PAGING_OBJ) $(DISK_OBJ) $(STR_OBJ) $(PARS_OBJ) $(DSTREAM_OBJ) $(FAT16_OBJ) $(FILE_OBJ) $(GDT_OBJ) $(GDT_ASM_OBJ) $(TSS_ASM_OBJ) $(TASK_OBJ)
+FILES = $(KERNEL_OBJ) $(KERNEL_C_OBJ) $(IDT_ASM_OBJ) $(IDT_OBJ) $(MEM_OBJ) $(IO_ASM_OBJ) $(HEAP_OBJ) $(KHEAP_OBJ) $(PAGING_ASM_OBJ) $(PAGING_OBJ) $(DISK_OBJ) $(STR_OBJ) $(PARS_OBJ) $(DSTREAM_OBJ) $(FAT16_OBJ) $(FILE_OBJ) $(GDT_OBJ) $(GDT_ASM_OBJ) $(TSS_ASM_OBJ) $(TASK_OBJ) $(PROCESS_OBJ)
 
 FLAGS = -g -ffreestanding -falign-jumps -falign-functions -falign-labels -falign-loops -fstrength-reduce -fomit-frame-pointer -finline-functions -Wno-unused-function -fno-builtin -Werror -Wno-unused-label -Wno-cpp -Wno-unused-parameter -nostdlib -nostartfiles -nodefaultlibs -Wall -O0 -Iinc
 
@@ -135,6 +137,9 @@ $(FAT16_OBJ): $(FAT16_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
 
 $(GDT_OBJ): $(GDT_SRC)
+	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
+
+$(PROCESS_OBJ): $(PROCESS_SRC)
 	i686-elf-gcc $(INCLUDES) -I./src/memory $(FLAGS) -std=gnu99 -c $< -o $@
 
 $(GDT_ASM_OBJ): $(GDT_ASM_SRC)
