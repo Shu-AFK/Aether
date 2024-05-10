@@ -71,7 +71,7 @@ QEMU := qemu-system-x86_64
 
 .PHONY: all test clean setup
 
-all: setup $(BOOT_BIN) $(KERNEL_BIN)
+all: setup $(BOOT_BIN) $(KERNEL_BIN) user_programs
 	rm -rf $(OS_BIN)
 	dd if=$(BOOT_BIN) >> $(OS_BIN)
 	dd if=$(KERNEL_BIN) >> $(OS_BIN)
@@ -159,5 +159,13 @@ $(TASK_ASM_OBJ): $(TASK_ASM_SRC)
 test: all
 	$(QEMU) -hda $(OS_BIN)
 
-clean:
+.PHONY: user_programs_clean
+user_programs_clean:
+	$(MAKE) -C ./user_programs/blank clean || { echo "Cleaning user_programs failed"; exit 1; }
+
+.PHONY: user_programs
+user_programs:
+	$(MAKE) -C ./user_programs/blank all || { echo "Building user_programs failed"; exit 1; }
+
+clean: user_programs_clean
 	rm -rf $(BIN_DIR)/* $(BUILD_DIR)/*
