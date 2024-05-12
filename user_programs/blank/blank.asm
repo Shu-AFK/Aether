@@ -7,4 +7,5 @@ global _start
 _start:
 
 label:
+    nop
     jmp label

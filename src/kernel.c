@@ -12,6 +12,9 @@
 #include "config.h"
 #include "gdt/gdt.h"
 #include "task/tss.h"
+#include "task/task.h"
+#include "task/process.h"
+#include "status.h"
 
 uint16_t *video_mem;
 uint16_t terminal_row = 0;
@@ -131,8 +134,14 @@ void kernel_main() {
     paging_switch(paging_4gb_chunk_get_directory(kernel_chunk)); // Switch to kernel paging chunk
     enable_paging();
 
+    // Loading the first user process
+    struct process *process = NULL;
+    int res = process_load("0:/blank.bin", &process);
+    if(res != AETHER_OK) {
+        panic("Failed to load blank.bin!\n");
+    }
 
-    enable_interrupts();
+    run_first_task();
 
     while(1) {}
 }

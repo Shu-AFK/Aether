@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+
+cd ./bin
+
+set timeout -1
+spawn gdb -tui
+send "add-symbol-file ../build/kernelfull.o 0x100000\n"
+send "y\n"
+send "target remote | qemu-system-i386 -hda ./os.bin -S -gdb stdio\n"
+
+# Wait for an event or keep the session interactive
+interact

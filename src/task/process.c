@@ -33,7 +33,7 @@ struct process *process_get(int process_id) {
 static int process_load_binary(const char *filename, struct process *process) {
     int res = 0;
     int fd = fopen(filename, "r");
-    if(fd <= 0) {
+    if(!fd) {
         res = -EIO;
         goto out;
     }
@@ -74,7 +74,7 @@ static int process_load_data(const char *filename, struct process *process) {
 
 int process_map_binary(struct process *process) {
     int res = 0;
-    res = paging_map_to(process->task->page_directory->directory_entry, (void *) AETHER_PROGRAM_VIRTUAL_ADDRESS,
+    paging_map_to(process->task->page_directory->directory_entry, (void *) AETHER_PROGRAM_VIRTUAL_ADDRESS,
                   process->ptr, paging_align_address(process->ptr + process->size), PAGING_IS_PRESENT | PAGING_ACCESS_FROM_ALL | PAGING_IS_WRITEABLE);
 
     return res;
@@ -147,7 +147,7 @@ int process_load_for_slot(const char *filename, struct process **process, int pr
 
     // Create a task
     task = task_new(_process);
-    if(ERROR_I(task)) {
+    if(ERROR_I(task) == 0) {
         res = ERROR_I(task);
         goto out;
     }
@@ -162,7 +162,7 @@ int process_load_for_slot(const char *filename, struct process **process, int pr
     *process = _process;
 
     // Add the process to the array
-    process[process_slot] = _process;
+    processes[process_slot] = _process;
 
 out:
     if(ISERR(res)) {

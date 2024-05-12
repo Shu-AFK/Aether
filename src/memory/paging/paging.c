@@ -2,7 +2,7 @@
 #include "memory/heap/kheap.h"
 #include "status.h"
 
-static uint32_t *current_directory = 0;
+static uint32_t *current_directory = NULL;
 
 void paging_load_directory(uint32_t *directory);
 
@@ -32,7 +32,8 @@ void paging_switch(uint32_t *directory) {
 void paging_free_4gb(struct paging_4gb_chunk *chunk) {
     for(int i = 0; i < 1024; i++) {
         uint32_t entry = chunk->directory_entry[i];
-        uint32_t *table = (uint32_t *) (uintptr_t) (entry & 0xffffff000);
+        /**/
+        uint32_t *table = (uint32_t *) (entry & 0xfffff000);
         kfree(table);
     }
 

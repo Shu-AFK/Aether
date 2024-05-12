@@ -78,6 +78,7 @@ all: setup $(BOOT_BIN) $(KERNEL_BIN) user_programs
 	dd if=/dev/zero bs=1048576 count=16 >> $(OS_BIN) # Fills the rest with 0 to for a sector
 	sudo mount -t vfat ./bin/os.bin /mnt/d # Mounts os.bin to /mnt/d so we can store files in the binary
 	sudo cp ./test.txt /mnt/d # Copying a testfile to /mnt/d (Remove if you don't want it)
+	sudo cp ./user_programs/blank/blank.bin /mnt/d # Copying a test user program to /mnt/d
 	sudo umount /mnt/d # Unmounting
 
 setup:
